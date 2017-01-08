@@ -5,7 +5,14 @@ using namespace std;
 
 sf::VideoMode VMode(840, 564, 32);
 sf::RenderWindow win(VMode, "Snake");
-
+struct coordonate
+{
+    int x, y;
+};
+int Map[1000][1000];
+int prim,ultim;
+coordonate worm[200000];
+coordonate mar;
 void play_mode();
 
 int main()
@@ -105,4 +112,40 @@ void play_mode()
         win.display();
 
     }
+}
+bool single_player()
+{
+    int dir=1, i, prim, ultim;
+    char nume[]="head0.png";
+    int lg=0;
+    coordonate nou;
+    sf::Texture background;
+    background.loadFromFile("BACKGROUND.jpg");
+    sf::Sprite sprite1(background);
+    sf::Clock clock;
+    sf::Texture pen;
+    pen.loadFromFile("mar.png");
+    sf::Sprite apple(pen);
+    sf::Texture body;
+    body.loadFromFile("interior_segment.png");
+    sf::Sprite segm(body);
+    sf::Texture head;
+
+    coordonate d[10];
+
+    d[0].x=0; d[1].x=1; d[2].x=0; d[3].x=-1;
+    d[0].y=-1; d[1].y=0; d[2].y=1; d[3].y=0;
+
+
+    mar.x=10;
+    mar.y=10;
+    prim=0;
+    ultim=1;
+    nou.x=12;
+    nou.y=5;
+    worm[0]=nou;
+    nou.x=13;
+    nou.y=5;
+    worm[1]=nou;
+    Map[5][13]=Map[5][12]=1;
 }
