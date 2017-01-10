@@ -82,7 +82,7 @@ int main()
 void play_mode()
 {
     sf::Texture mod_joc;
-    mod_joc.loadFromFile("play_mode.png");
+    mod_joc.loadFromFile("play_modes.png");
     sf::Sprite sprite(mod_joc);
     while (win.isOpen() )
     {
@@ -96,7 +96,7 @@ void play_mode()
             {
                 if( ( 230<event.mouseButton.x && event.mouseButton.x<590 ) && ( 268<event.mouseButton.y && event.mouseButton.y<306 ) )
                 {
-                    cout<<"Single player mode.\n";
+                     if(!single_player()) win.close();
                 }
                 else if( ( 154<event.mouseButton.x && event.mouseButton.x<661 ) && ( 445<event.mouseButton.y && event.mouseButton.y<478 ) )
                 {
@@ -179,6 +179,66 @@ bool single_player()
         if(clock.getElapsedTime().asMilliseconds()>=75)
         {
             clock.restart();
+            nou.x=worm[ultim].x+d[dir].x;
+            nou.y=worm[ultim].y+d[dir].y;
+
+            if(nou.x==-1) nou.x=21;
+            else if (nou.x==21 ) nou.x=0;
+
+            if(nou.y==-1) nou.y=14;
+            else if (nou.y==14) nou.y=0;
+
+            worm[++ultim]=nou;
+
+            if(Map[worm[ultim].y][worm[ultim].x])
+            {
+                //game over
+
+                return 0;
+
+            }
+            else Map[worm[ultim].y][worm[ultim].x]=1;
+
+            if(worm[ultim].x==mar.x && worm[ultim].y==mar.y)
+            {
+
+
+                do{
+                    mar.x = rand() % 20 + 1;
+                    mar.y = rand() % 13 + 1;
+                }
+                while ( Map[mar.y][mar.x]);
+            }
+            else
+            {
+                Map[ worm[prim].y ] [worm[prim].x ]=0;
+                ++prim;
+            }
         }
+         nume[4]=dir+'0';
+        head.loadFromFile(nume);
+        sf::Sprite capet(head);
+        win.clear();
+        win.draw(sprite1);
+        apple.setPosition(40*mar.x, 40*mar.y);
+        win.draw(apple);
+        //desenez rama
+
+
+        for(i=prim; i<ultim; ++i)
+        {
+            segm.setPosition(40*worm[i].x, 40*worm[i].y);
+            win.draw(segm);
+        }
+
+        capet.setPosition(40*worm[ultim].x, 40*worm[ultim].y);
+        win.draw(capet);
+
+
+
+        win.display();
     }
+
+    return 0;
+
 }
