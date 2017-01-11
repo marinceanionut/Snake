@@ -249,6 +249,7 @@ bool multiplayer ()
 {
     int dir=1, dir_second=1, i, prim, ultim, prim_second, ultim_second;
     char nume[]="head0.png";
+    char nume1[]="header0.png";
     int lg=0;
     coordonate nou;
     sf::Texture background;
@@ -262,6 +263,10 @@ bool multiplayer ()
     body.loadFromFile("interior_segment.png");
     sf::Sprite segm(body);
     sf::Texture head;
+    sf::Texture header;
+    sf::Texture body1;
+    body1.loadFromFile("interior_segmenth.png");
+    sf::Sprite segm1(body1);
 
     coordonate d[10];
 
@@ -433,9 +438,9 @@ bool multiplayer ()
 
         ///al doilea sarpe
 
-        nume[4]=dir_second+'0';
-        head.loadFromFile(nume);
-        sf::Sprite capet2(head);
+        nume1[6]=dir_second+'0';
+        header.loadFromFile(nume1);
+        sf::Sprite capet2(header);
         //desenez rama
 
 
