@@ -3,7 +3,7 @@
 
 using namespace std;
 
-sf::VideoMode VMode(840, 564, 32);
+sf::VideoMode VMode(880, 604, 32);
 sf::RenderWindow win(VMode, "Snake");
 struct coordonate
 {
@@ -20,8 +20,8 @@ void play_mode();
 bool single_player();
 bool multiplayer();
 bool vs_computer();
-void lee(coordonate start, coordonate stop);
-
+bool lee(coordonate start, coordonate stop);
+void help();
 int main()
 {
 
@@ -63,7 +63,7 @@ int main()
                 else if( ( 356<event.mouseButton.x && event.mouseButton.x<460 ) && ( 448<event.mouseButton.y && event.mouseButton.y<485 ) )
                 {
                     //help
-                    cout<<"Pagina de ajutor.\n";
+                    help();
                 }
                 else if( ( 361<event.mouseButton.x && event.mouseButton.x<457 ) && ( 513<event.mouseButton.y && event.mouseButton.y<546 ) )
                 {
@@ -188,10 +188,10 @@ bool single_player()
             nou.y=worm[ultim].y+d[dir].y;
 
             if(nou.x==-1) nou.x=21;
-            else if (nou.x==21 ) nou.x=0;
+            else if (nou.x==22 ) nou.x=0;
 
             if(nou.y==-1) nou.y=14;
-            else if (nou.y==14) nou.y=0;
+            else if (nou.y==15) nou.y=0;
 
             worm[++ultim]=nou;
 
@@ -350,10 +350,10 @@ bool multiplayer ()
             nou.y=worm[ultim].y+d[dir].y;
 
             if(nou.x==-1) nou.x=21;
-            else if (nou.x==21 ) nou.x=0;
+            else if (nou.x==22 ) nou.x=0;
 
             if(nou.y==-1) nou.y=14;
-            else if (nou.y==14) nou.y=0;
+            else if (nou.y==15) nou.y=0;
 
             worm[++ultim]=nou;
 
@@ -386,10 +386,10 @@ bool multiplayer ()
             nou.y=worm_second[ultim_second].y+d[dir_second].y;
 
             if(nou.x==-1) nou.x=21;
-            else if (nou.x==21 ) nou.x=0;
+            else if (nou.x==22 ) nou.x=0;
 
             if(nou.y==-1) nou.y=14;
-            else if (nou.y==14) nou.y=0;
+            else if (nou.y==15) nou.y=0;
 
             worm_second[++ultim_second]=nou;
 
@@ -586,7 +586,8 @@ bool vs_computer()
                     mar.y = rand() % 13 + 1;
                 }
                 while ( Map[mar.y][mar.x]);
-               lee(mar, worm_second[ultim_second]);
+               if(!lee(mar, worm_second[ultim_second]))
+                    return 0;
                 nr=0;
             }
             else
@@ -673,7 +674,7 @@ bool vs_computer()
 
 
         ///al doilea sarpe
-nume1[6]=dir_second+'0';
+        nume1[6]=dir_second+'0';
         header.loadFromFile(nume1);
         sf::Sprite capet2(header);
         //desenez rama
@@ -693,7 +694,8 @@ nume1[6]=dir_second+'0';
     }
     return 1;
 }
-void lee(coordonate start, coordonate stop)
+
+bool lee(coordonate start, coordonate stop)
 {
     coordonate actual, next, coada[10000], d[10];
     int prim, ultim, i, j, nr=0;
@@ -842,4 +844,33 @@ void lee(coordonate start, coordonate stop)
 
     }
 
+}
+void help()
+{
+    sf::Texture background;
+    background.loadFromFile("help.png");
+    sf::Sprite sprite(background);
+     while (win.isOpen() )
+    {
+
+        sf::Event event;
+        while (win.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                win.close();
+             if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
+                win.close();
+
+            else if( event.type == sf::Event::MouseButtonPressed)
+            {
+                if( ( 611<event.mouseButton.x && event.mouseButton.x<721 ) && ( 514<event.mouseButton.y && event.mouseButton.y<539 ) )
+                    return;
+            }
+        }
+
+        win.clear();
+        win.draw(sprite);
+        win.display();
+
+    }
 }
