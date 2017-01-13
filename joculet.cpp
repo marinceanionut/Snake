@@ -22,6 +22,7 @@ bool multiplayer();
 bool vs_computer();
 bool lee(coordonate start, coordonate stop);
 void help();
+void player1();
 int main()
 {
 
@@ -899,6 +900,29 @@ void help()
                 if( ( 611<event.mouseButton.x && event.mouseButton.x<721 ) && ( 514<event.mouseButton.y && event.mouseButton.y<539 ) )
                     return;
             }
+        }
+
+        win.clear();
+        win.draw(sprite);
+        win.display();
+
+    }
+}
+void player1()
+{
+    sf::Texture background;
+    background.loadFromFile("playerone.png");
+    sf::Sprite sprite(background);
+     while (win.isOpen() )
+    {
+
+        sf::Event event;
+        while (win.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                win.close();
+             if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
+                win.close();
         }
 
         win.clear();
