@@ -20,6 +20,7 @@ void play_mode();
 bool single_player();
 bool multiplayer();
 bool vs_computer();
+void lee();
 
 int main()
 {
@@ -693,4 +694,154 @@ bool vs_computer()
         win.display();
     }
     return 1;
+}
+void lee(coordonate start, coordonate stop)
+{
+    coordonate actual, next, coada[10000], d[10];
+    int prim, ultim, i, j, nr=0;
+
+    d[0].x=0; d[1].x=1; d[2].x=0; d[3].x=-1;
+    d[0].y=-1; d[1].y=0; d[2].y=1; d[3].y=0;
+
+    for(i=0; i<=15; ++i)
+        for(j=0; j<=22; ++j)
+        Mlee[i][j]=0;
+
+    for(i=prim_second; i<ultim_second; ++i)
+        Mlee[ worm_second[i].y ][ worm_second[i].x ]=-1;
+
+    nr_executari++;
+    cout<<ultim_second<<'\n';
+    prim=ultim=0;
+    coada[0]=start;
+    Mlee[start.y][start.x]=1;
+    while(prim<=ultim &&!Mlee[stop.y][stop.x])
+    {
+        actual=coada[prim++];
+        for(i=0; i<4; ++i)
+        {
+            next.y=actual.y+d[i].y;
+            next.x=actual.x+d[i].x;
+            if(next.y>=0 && next.x>=0 && next.y<15 && next.x<22 && Mlee[next.y][next.x]==0)
+            {
+                Mlee[next.y][next.x]=Mlee[actual.y][actual.x]+1;
+                coada[++ultim]=next;
+            }
+
+        }
+        if(actual.y==0 )
+        {
+            next.x=actual.x;
+            next.y=14;
+            if(Mlee[next.y][next.x]==0)
+            {
+                Mlee[next.y][next.x]=Mlee[actual.y][actual.x]+1;
+                coada[++ultim]=next;
+            }
+
+        }
+        if(actual.x==0 )
+        {
+            next.y=actual.y;
+            next.x=21;
+            if(Mlee[next.y][next.x]==0)
+            {
+                Mlee[next.y][next.x]=Mlee[actual.y][actual.x]+1;
+                coada[++ultim]=next;
+            }
+
+        }
+        if(actual.y==14 )
+        {
+            next.x=actual.x;
+            next.y=0;
+            if(Mlee[next.y][next.x]==0)
+            {
+                Mlee[next.y][next.x]=Mlee[actual.y][actual.x]+1;
+                coada[++ultim]=next;
+            }
+
+        }
+        if(actual.x==21 )
+        {
+            next.y=actual.y;
+            next.x=0;
+            if(Mlee[next.y][next.x]==0)
+            {
+                Mlee[next.y][next.x]=Mlee[actual.y][actual.x]+1;
+                coada[++ultim]=next;
+            }
+
+        }
+    }
+
+
+    actual=stop;
+    while(Mlee[actual.y][actual.x]!=1)
+    {
+        for(i=0; i<4; ++i)
+        {
+            next.y=actual.y+d[i].y;
+            next.x=actual.x+d[i].x;
+            if(Mlee[next.y][next.x]==Mlee[actual.y][actual.x]-1)
+            {
+                actual=next;
+                vdir[++nr]=i;
+                break;
+            }
+        }
+        if(i!=4)
+            continue;
+
+        if(actual.y==0 )
+        {
+            next.x=actual.x;
+            next.y=14;
+            if(Mlee[next.y][next.x]==Mlee[actual.y][actual.x]-1)
+            {
+                actual=next;
+                vdir[++nr]=0;
+                continue;
+            }
+
+        }
+        if(actual.x==0 )
+        {
+            next.y=actual.y;
+            next.x=21;
+            if(Mlee[next.y][next.x]==Mlee[actual.y][actual.x]-1)
+            {
+                actual=next;
+                vdir[++nr]=3;
+                continue;
+            }
+
+        }
+        if(actual.y==14 )
+        {
+            next.x=actual.x;
+            next.y=0;
+            if(Mlee[next.y][next.x]==Mlee[actual.y][actual.x]-1)
+            {
+                actual=next;
+                vdir[++nr]=2;
+                continue;
+            }
+
+        }
+        if(actual.x==21 )
+        {
+            next.y=actual.y;
+            next.x=0;
+            if(Mlee[next.y][next.x]==Mlee[actual.y][actual.x]-1)
+            {
+                actual=next;
+                vdir[++nr]=1;
+                continue;
+            }
+
+        }
+
+    }
+
 }
