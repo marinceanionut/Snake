@@ -20,7 +20,7 @@ void play_mode();
 bool single_player();
 bool multiplayer();
 bool vs_computer();
-void lee();
+void lee(coordonate start, coordonate stop);
 
 int main()
 {
@@ -586,7 +586,7 @@ bool vs_computer()
                     mar.y = rand() % 13 + 1;
                 }
                 while ( Map[mar.y][mar.x]);
-                lee(mar, worm_second[ultim_second]);
+               lee(mar, worm_second[ultim_second]);
                 nr=0;
             }
             else
@@ -673,8 +673,7 @@ bool vs_computer()
 
 
         ///al doilea sarpe
-
-        nume1[6]=dir_second+'0';
+nume1[6]=dir_second+'0';
         header.loadFromFile(nume1);
         sf::Sprite capet2(header);
         //desenez rama
@@ -688,7 +687,6 @@ bool vs_computer()
 
         capet2.setPosition(40*worm_second[ultim_second].x, 40*worm_second[ultim_second].y);
         win.draw(capet2);
-
 
 
         win.display();
@@ -710,7 +708,7 @@ void lee(coordonate start, coordonate stop)
     for(i=prim_second; i<ultim_second; ++i)
         Mlee[ worm_second[i].y ][ worm_second[i].x ]=-1;
 
-    nr_executari++;
+
     cout<<ultim_second<<'\n';
     prim=ultim=0;
     coada[0]=start;
@@ -825,7 +823,7 @@ void lee(coordonate start, coordonate stop)
             {
                 actual=next;
                 vdir[++nr]=2;
-                continue;
+               continue;
             }
 
         }
