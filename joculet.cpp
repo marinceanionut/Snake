@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-
+#include <string.h>
 using namespace std;
 
 sf::VideoMode VMode(880, 604, 32);
@@ -15,7 +15,7 @@ coordonate worm[200000], worm_second[200000];
 coordonate mar;
 int vdir[10000];
 int Mlee[100][100];
-
+char* int_to_a(int x);
 void play_mode();
 bool single_player();
 bool multiplayer();
@@ -45,6 +45,9 @@ int main()
             {
                 win.close();
             }
+            if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
+                win.close();
+
             else if( event.type == sf::Event::MouseButtonPressed)
             {
                 if( ( 356<event.mouseButton.x && event.mouseButton.x<466 ) && ( 314<event.mouseButton.y && event.mouseButton.y<355 ) )
@@ -96,6 +99,8 @@ void play_mode()
         while (win.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
+                win.close();
+                if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
                 win.close();
             else if( event.type == sf::Event::MouseButtonPressed)
             {
@@ -166,6 +171,8 @@ bool single_player()
                 //win.close();
                 return 0;
             }
+            if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
+                win.close();
             else if(event.type == sf::Event::KeyPressed)
             {
                 if(event.key.code == sf::Keyboard::Up && dir!=2)
@@ -251,7 +258,8 @@ bool single_player()
 
 bool multiplayer ()
 {
-    int dir=1, dir_second=1, i, prim, ultim, prim_second, ultim_second;
+    int dir=1, dir_second=1, i, prim, ultim, prim_second, ultim_second,scor_prim=0, scor_second=0;
+     char string_score1[10], string_score2[10];
     char nume[]="head0.png";
     char nume1[]="header0.png";
     coordonate nou;
@@ -303,6 +311,11 @@ bool multiplayer ()
     nou.y=3;
     worm_second[1]=nou;
     Map[3][13]=Map[3][12]=2;
+    sf::Text text;
+    sf::Font font;
+    font.loadFromFile("msjh.ttc");
+    text.setFont(font);
+    text.setPosition(0, 0);
 
     while(win.isOpen())
     {
@@ -315,6 +328,8 @@ bool multiplayer ()
                 //win.close();
                 return 0;
             }
+            if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
+                win.close();
             else if(event.type == sf::Event::KeyPressed)
             {
                 if(event.key.code == sf::Keyboard::Up && dir!=2)
@@ -367,6 +382,7 @@ bool multiplayer ()
 
             if(worm[ultim].x==mar.x && worm[ultim].y==mar.y)
             {
+                scor_prim+=5;
 
                 do{
                     mar.x = rand() % 20 + 1;
@@ -404,6 +420,7 @@ bool multiplayer ()
 
             if(worm_second[ultim_second].x==mar.x && worm_second[ultim_second].y==mar.y)
             {
+                scor_second+=5;
 
                 do{
                     mar.x = rand() % 20 + 1;
@@ -457,6 +474,22 @@ bool multiplayer ()
 
         capet2.setPosition(40*worm_second[ultim_second].x, 40*worm_second[ultim_second].y);
         win.draw(capet2);
+          sf::Text text1;
+        strcpy(string_score1, "Score P1: ");
+        text1.setFont(font);
+        text1.setPosition(0, 0);
+        strcat(string_score1, int_to_a(scor_prim));
+        text1.setString(string_score1);
+        win.draw(text1);
+
+        sf::Text text2;
+        strcpy(string_score2, "Score P2: ");
+        text2.setFont(font);
+        text2.setPosition(700, 0);
+        strcat(string_score2, int_to_a(scor_second));
+        text2.setString(string_score2);
+        win.draw(text2);
+
 
 
 
@@ -535,6 +568,8 @@ bool vs_computer()
                 //win.close();
                 return 0;
             }
+            if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
+                win.close();
             else if(event.type == sf::Event::KeyPressed)
             {
                 if(event.key.code == sf::Keyboard::Up && dir!=2)
@@ -688,8 +723,6 @@ bool vs_computer()
 
         capet2.setPosition(40*worm_second[ultim_second].x, 40*worm_second[ultim_second].y);
         win.draw(capet2);
-
-
         win.display();
     }
     return 1;
@@ -874,3 +907,19 @@ void help()
 
     }
 }
+char* int_to_a(int x)
+{
+    char sir[8]; int numar[10], i=0, j;
+    if(x==0) {sir[0]='0'; sir[1]=0; return sir;}
+    while(x)
+    {
+        numar[i++]=x%10;
+        x/=10;
+    }
+    for(j=0;j<i;++j)
+        sir[j]=numar[i-j-1]+'0';
+    sir[j]=0;
+    return sir;
+
+}
+

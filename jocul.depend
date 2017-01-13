@@ -1,7 +1,8 @@
 # depslib dependency file v1.0
-1484290478 source:c:\git\snake\joculet.cpp
+1484336724 source:c:\git\snake\joculet.cpp
 	<SFML/Graphics.hpp>
 	<iostream>
+	<string.h>
 
 1470642834 c:\program files (x86)\codeblocks\sfml\include\sfml\graphics.hpp
 	<SFML/Window.hpp>
