@@ -392,7 +392,9 @@
 	<string>
 	<vector>
 
-1484251501 source:p:\ip\git_upload\snake\joculet.cpp
+1484343791 source:p:\ip\git_upload\snake\joculet.cpp
+	<ctime>
 	<SFML/Graphics.hpp>
-	<iostream>
+	<fstream>
+	<string.h>
 

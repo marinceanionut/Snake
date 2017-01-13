@@ -1,5 +1,6 @@
+#include <ctime>
 #include <SFML/Graphics.hpp>
-#include <iostream>
+#include <fstream>
 #include <string.h>
 using namespace std;
 
@@ -9,6 +10,16 @@ struct coordonate
 {
     int x, y;
 };
+
+struct scoreboard{
+char nume[200];
+int score;
+};
+
+scoreboard actual;
+scoreboard record[5];
+
+int remained_time=45;
 int Map[1000][1000];
 int prim, ultim, prim_second, ultim_second;
 coordonate worm[200000], worm_second[200000];
@@ -18,17 +29,19 @@ int Mlee[100][100];
 char* int_to_a(int x);
 void play_mode();
 bool single_player();
-bool multiplayer();
+int multiplayer();
 bool vs_computer();
 bool lee(coordonate start, coordonate stop);
 void help();
-void player1();
+void read();
+void new_record();
+void highscore();
+void afisare();
+
 int main()
 {
 
-//    sf::CircleShape shape(100.f);
-//    shape.setFillColor(sf::Color::Green);
-
+    read();
 
     sf::Texture Menu;
     Menu.loadFromFile("MENU.png");
@@ -62,7 +75,7 @@ int main()
                 else if( ( 251<event.mouseButton.x && event.mouseButton.x<564 ) && ( 381<event.mouseButton.y && event.mouseButton.y<418 ) )
                 {
                     //scoreboard
-                    cout<<"Scorurile record\n";
+                    highscore();
                 }
                 else if( ( 356<event.mouseButton.x && event.mouseButton.x<460 ) && ( 448<event.mouseButton.y && event.mouseButton.y<485 ) )
                 {
@@ -71,7 +84,6 @@ int main()
                 }
                 else if( ( 361<event.mouseButton.x && event.mouseButton.x<457 ) && ( 513<event.mouseButton.y && event.mouseButton.y<546 ) )
                 {
-                    cout<<"Iesire din program.\n";
                    //exit
                    win.close();
                 }
@@ -87,6 +99,14 @@ int main()
     return 0;
 }
 
+void read()
+{
+    ifstream fin ("scoruri_record.txt");
+
+    int i=0;
+    while(fin>>record[i].nume>>record[i].score)
+        ++i;
+}
 
 void play_mode()
 {
@@ -109,13 +129,132 @@ void play_mode()
                 {
                      if(!single_player()) win.close();
                 }
-                else if( ( 154<event.mouseButton.x && event.mouseButton.x<661 ) && ( 445<event.mouseButton.y && event.mouseButton.y<478 ) )
+                else if( ( 154<event.mouseButton.x && event.mouseButton.x<725 ) && ( 445<event.mouseButton.y && event.mouseButton.y<478 ) )
                 {
-                    if(!vs_computer()) win.close();
+                    int rez0=vs_computer();
+                    if(!rez0)
+                    {
+                        sf::Texture cwon;
+                        cwon.loadFromFile("C_won.png");
+                        sf::Sprite sprite1(cwon);
+                        while(win.isOpen())
+                        {
+                            sf::Event event;
+                            while (win.pollEvent(event))
+                            {
+                                if (event.type == sf::Event::Closed)
+                                {
+                                    win.close();
+                                }
+                            }
+                            win.clear();
+                            win.draw(sprite1);
+                            win.display();
+                        }
+
+                        sf::Texture pwon;
+                        pwon.loadFromFile("P1_won.png");
+                        sf::Sprite sprite(pwon);
+                        while(win.isOpen())
+                        {
+                            sf::Event event;
+                            while (win.pollEvent(event))
+                            {
+                                if (event.type == sf::Event::Closed)
+                                {
+                                    win.close();
+                                }
+                            }
+                            win.clear();
+                            win.draw(sprite);
+                            win.display();
+                        }
+                    }
+                    else
+                    {
+                        sf::Texture pwon;
+                        pwon.loadFromFile("P1_won.png");
+                        sf::Sprite sprite(pwon);
+                        while(win.isOpen())
+                        {
+                            sf::Event event;
+                            while (win.pollEvent(event))
+                            {
+                                if (event.type == sf::Event::Closed)
+                                {
+                                    win.close();
+                                }
+                            }
+                            win.clear();
+                            win.draw(sprite);
+                            win.display();
+                        }
+                    }
                 }
                 else if( ( 194<event.mouseButton.x && event.mouseButton.x<623 ) && ( 356<event.mouseButton.y && event.mouseButton.y<393 ) )
                 {
-                    if(!multiplayer()) win.close();
+                    int rez=multiplayer();
+                    if(!rez)
+                    {
+                        sf::Texture draw;
+                        draw.loadFromFile("D_game.png");
+                        sf::Sprite sprite1(draw);
+                        while(win.isOpen())
+                        {
+                            sf::Event event;
+                            while (win.pollEvent(event))
+                            {
+                                if (event.type == sf::Event::Closed)
+                                {
+                                    win.close();
+                                }
+                            }
+                            win.clear();
+                            win.draw(sprite1);
+                            win.display();
+                        }
+                    }
+                    else if(rez==1)
+                    {
+                        sf::Texture p1won;
+                        p1won.loadFromFile("P1_won.png");
+                        sf::Sprite sprite2(p1won);
+                        while(win.isOpen())
+                        {
+                            sf::Event event;
+                            while (win.pollEvent(event))
+                            {
+                                if (event.type == sf::Event::Closed)
+                                {
+                                    win.close();
+                                }
+                            }
+                            win.clear();
+                            win.draw(sprite2);
+                            win.display();
+                        }
+                    }
+                        else if(rez==-1)
+                        {
+                            sf::Texture p2won;
+                            p2won.loadFromFile("P2_won.png");
+                            sf::Sprite sprite3(p2won);
+                            while(win.isOpen())
+                            {
+                                sf::Event event;
+                                while (win.pollEvent(event))
+                                {
+                                    if (event.type == sf::Event::Closed)
+                                    {
+                                        win.close();
+                                    }
+                                }
+                                win.clear();
+                                win.draw(sprite3);
+                                win.display();
+                            }
+                        }
+
                 }
             }
         }
@@ -126,8 +265,11 @@ void play_mode()
 
     }
 }
+
 bool single_player()
 {
+    char scor_actual[10];
+    scor_actual[0]=0;
     int dir=1, i, prim, ultim;
     char nume[]="head0.png";
     coordonate nou;
@@ -164,6 +306,15 @@ bool single_player()
     while(win.isOpen())
     {
 
+        sf::Text text;
+        sf::Font font;
+        font.loadFromFile("msjh.ttc");
+        strcpy(scor_actual, "Score: ");
+        strcat(scor_actual, int_to_a(actual.score));
+        text.setString(scor_actual);
+        text.setFont(font);
+        text.setPosition(0, 0);
+
         sf::Event event;
         while (win.pollEvent(event))
         {
@@ -189,7 +340,7 @@ bool single_player()
 
 
         }
-        if(clock.getElapsedTime().asMilliseconds()>=75)
+        if(clock.getElapsedTime().asMilliseconds()>=100)
         {
             clock.restart();
             nou.x=worm[ultim].x+d[dir].x;
@@ -206,7 +357,8 @@ bool single_player()
             if(Map[worm[ultim].y][worm[ultim].x])
             {
                 //game over
-
+                if(actual.score>record[2].score)
+                    new_record();
                 return 0;
 
             }
@@ -214,8 +366,8 @@ bool single_player()
 
             if(worm[ultim].x==mar.x && worm[ultim].y==mar.y)
             {
-
-
+                actual.score+=5;
+                srand(time(0));
                 do{
                     mar.x = rand() % 20 + 1;
                     mar.y = rand() % 13 + 1;
@@ -236,7 +388,7 @@ bool single_player()
         apple.setPosition(40*mar.x, 40*mar.y);
         win.draw(apple);
         //desenez rama
-
+        win.draw(text);
 
         for(i=prim; i<ultim; ++i)
         {
@@ -257,10 +409,10 @@ bool single_player()
 }
 
 
-bool multiplayer ()
+int multiplayer ()
 {
     int dir=1, dir_second=1, i, prim, ultim, prim_second, ultim_second,scor_prim=0, scor_second=0;
-     char string_score1[10], string_score2[10];
+     char string_score1[10], string_score2[10], string_time_elapse[5];
     char nume[]="head0.png";
     char nume1[]="header0.png";
     coordonate nou;
@@ -268,6 +420,7 @@ bool multiplayer ()
     background.loadFromFile("BACKGROUND.jpg");
     sf::Sprite sprite1(background);
     sf::Clock clock;
+    sf::Clock clock1;
     sf::Texture pen;
     pen.loadFromFile("mar.png");
     sf::Sprite apple(pen);
@@ -321,9 +474,32 @@ bool multiplayer ()
     while(win.isOpen())
     {
 
+        if(clock1.getElapsedTime().asSeconds()>=1&&remained_time>0)
+            {
+                clock1.restart();
+                remained_time--;
+            }
+            else if(remained_time==0)
+            {
+                if(scor_prim>scor_second)
+                {
+                    return 1;
+                }
+                else
+                    if(scor_prim<scor_second)
+                    {
+                        return -1;
+                    }
+                    else
+                        {
+                            return 0;
+                        }
+            }
+
         sf::Event event;
         while (win.pollEvent(event))
         {
+
             if (event.type == sf::Event::Closed)
             {
                 //win.close();
@@ -357,7 +533,7 @@ bool multiplayer ()
 
         //delay
 
-        if(clock.getElapsedTime().asMilliseconds()>=75)
+        if(clock.getElapsedTime().asMilliseconds()>=100)
         {
             ///primul sarpe
             clock.restart();
@@ -376,7 +552,7 @@ bool multiplayer ()
             if(Map[worm[ultim].y][worm[ultim].x]==1)
             {
                 //game over
-                return 0;
+                return -1;
 
             }
             else Map[worm[ultim].y][worm[ultim].x]=1;
@@ -385,6 +561,7 @@ bool multiplayer ()
             {
                 scor_prim+=5;
 
+                srand(time(0));
                 do{
                     mar.x = rand() % 20 + 1;
                     mar.y = rand() % 13 + 1;
@@ -413,7 +590,7 @@ bool multiplayer ()
             if(Map[worm_second[ultim_second].y][worm_second[ultim_second].x]==2)
             {
                 //game over
-                return 0;
+                return 1;
 
             }
             else Map[worm_second[ultim_second].y][worm_second[ultim_second].x]=2;
@@ -422,7 +599,7 @@ bool multiplayer ()
             if(worm_second[ultim_second].x==mar.x && worm_second[ultim_second].y==mar.y)
             {
                 scor_second+=5;
-
+                srand(time(0));
                 do{
                     mar.x = rand() % 20 + 1;
                     mar.y = rand() % 13 + 1;
@@ -490,6 +667,13 @@ bool multiplayer ()
         strcat(string_score2, int_to_a(scor_second));
         text2.setString(string_score2);
         win.draw(text2);
+
+        sf::Text text3;
+        text3.setFont(font);
+        text3.setPosition(400, 0);
+        strcpy(string_time_elapse, int_to_a(remained_time));
+        text3.setString(string_time_elapse);
+        win.draw(text3);
 
 
 
@@ -617,13 +801,14 @@ bool vs_computer()
             if(worm[ultim].x==mar.x && worm[ultim].y==mar.y)
             {
 
+                srand(time(0));
                 do{
                     mar.x = rand() % 20 + 1;
                     mar.y = rand() % 13 + 1;
                 }
                 while ( Map[mar.y][mar.x]);
                if(!lee(mar, worm_second[ultim_second]))
-                    return 0;
+                    return 1;
                 nr=0;
             }
             else
@@ -655,7 +840,7 @@ bool vs_computer()
             {
 
                 //game over
-                return 0;
+                return 1;
 
             }
             else Map[worm_second[ultim_second].y][worm_second[ultim_second].x]=2;
@@ -664,6 +849,7 @@ bool vs_computer()
             if(worm_second[ultim_second].x==mar.x && worm_second[ultim_second].y==mar.y)
             {
 
+                srand(time(0));
                 do{
                     mar.x = rand() % 20 + 1;
                     mar.y = rand() % 13 + 1;
@@ -671,13 +857,6 @@ bool vs_computer()
                 while ( Map[mar.y][mar.x]);
                 lee(mar, worm_second[ultim_second]);
                 nr=0;
-                for(int i=0;i<15;++i)
-                {
-                    for(int j=0;j<22;++j)
-                        if(Mlee[i][j]/10==0) cout<<Mlee[i][j]<<"  ";
-                        else                 cout<<Mlee[i][j]<<' ';
-                    cout<<'\n';
-                }
             }
             else
             {
@@ -744,8 +923,6 @@ bool lee(coordonate start, coordonate stop)
     for(i=prim_second; i<ultim_second; ++i)
         Mlee[ worm_second[i].y ][ worm_second[i].x ]=-1;
 
-
-    cout<<ultim_second<<'\n';
     prim=ultim=0;
     coada[0]=start;
     Mlee[start.y][start.x]=1;
@@ -808,7 +985,7 @@ bool lee(coordonate start, coordonate stop)
 
         }
     }
-
+    if(prim>ultim) return 0;
 
     actual=stop;
     while(Mlee[actual.y][actual.x]!=1)
@@ -859,7 +1036,7 @@ bool lee(coordonate start, coordonate stop)
             {
                 actual=next;
                 vdir[++nr]=2;
-               continue;
+                continue;
             }
 
         }
@@ -877,8 +1054,9 @@ bool lee(coordonate start, coordonate stop)
         }
 
     }
-
+    return 1;
 }
+
 void help()
 {
     sf::Texture background;
@@ -908,29 +1086,7 @@ void help()
 
     }
 }
-void player1()
-{
-    sf::Texture background;
-    background.loadFromFile("playerone.png");
-    sf::Sprite sprite(background);
-     while (win.isOpen() )
-    {
 
-        sf::Event event;
-        while (win.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                win.close();
-             if ((event.type == sf::Event::KeyPressed) && (event.key.code == sf::Keyboard::Escape))
-                win.close();
-        }
-
-        win.clear();
-        win.draw(sprite);
-        win.display();
-
-    }
-}
 char* int_to_a(int x)
 {
     char sir[8]; int numar[10], i=0, j;
@@ -947,3 +1103,183 @@ char* int_to_a(int x)
 
 }
 
+void new_record()
+{
+    int lg=0;
+    sf::Texture background;
+    background.loadFromFile("BACKGROUND.jpg");
+    sf::Sprite sprite1(background);
+    sf::Text text;
+    sf::Font font;
+    font.loadFromFile("msjh.ttc");
+    text.setString("Introduceti numele si apoi apasati enter!");
+    text.setFont(font);
+    text.setPosition(100, 200);
+
+
+
+    while(win.isOpen())
+                {
+                    sf::Event event;
+                    win.clear();
+                    win.draw(sprite1);
+                    win.draw(text);
+                    sf::Text text1;
+                    text1.setFont(font);
+                    text1.setPosition(300, 300);
+                    text1.setString(actual.nume);
+                        win.draw(text1);
+                    while(win.pollEvent(event))
+                    {
+                        if(event.type==sf::Event::TextEntered)
+                        {
+                            if(lg==12)
+                            {
+                                if(event.text.unicode==13)
+                                {
+                                    actual.nume[lg]=NULL;
+                                    if(actual.score>record[0].score)
+                                    {
+                                        record[2]=record[1];
+                                        record[1]=record[0];
+                                        record[0]=actual;
+                                    }
+                                    else if(actual.score>record[1].score)
+                                    {
+                                        record[2]=record[1];
+                                        record[1]=actual;
+
+                                    }
+                                    else if(actual.score>record[2].score)
+                                        record[2]=actual;
+                                    afisare();
+                                    return;
+                                }
+                                if(event.text.unicode==8)
+                                {
+                                    lg--;
+                                    actual.nume[lg]=NULL;
+                                }
+                            }
+                            else
+                            {
+                                    if( (event.text.unicode==32||event.text.unicode>=65&&event.text.unicode<=90) || (event.text.unicode>=97&&event.text.unicode<=122) )
+                                {
+                                    actual.nume[lg++]=static_cast<char>(event.text.unicode);
+                                    actual.nume[lg]=NULL;
+                                }
+                                if(event.text.unicode==8&&lg>0)
+                                {
+                                    lg--;
+                                    actual.nume[lg]=NULL;
+                                }
+
+                                if(event.text.unicode==13)
+                                {
+                                    actual.nume[lg]=NULL;
+                                    if(actual.score>record[0].score)
+                                    {
+                                        record[2]=record[1];
+                                        record[1]=record[0];
+                                        record[0]=actual;
+                                    }
+                                    else if(actual.score>record[1].score)
+                                    {
+                                        record[2]=record[1];
+                                        record[1]=actual;
+
+                                    }
+                                    else if(actual.score>record[2].score)
+                                        record[2]=actual;
+                                    afisare();
+                                    return;
+                                }
+                            }
+                        }
+                    }
+
+                    win.display();
+                }
+
+}
+
+void afisare()
+{
+    int i;
+    ofstream fout("scoruri_record.txt");
+    for(i=0;i<3;++i)
+    {
+        if(record[i].nume[0])
+        fout<< record[i].nume<<' '<<record[i].score<<'\n';
+    }
+    fout.close();
+}
+
+void highscore()
+{
+
+    sf::Texture background;
+    background.loadFromFile("SCOREBOARD.png");
+    sf::Sprite sprite(background);
+    sf::Text record0, record1, record2;
+    sf::Text record00, record11, record22;
+    sf::Font font;
+    font.loadFromFile("msjh.ttc");
+    record0.setCharacterSize(50);
+    record0.setString(record[0].nume);
+    record0.setFont(font);
+    record0.setPosition(150, 200);
+    record1.setCharacterSize(50);
+    record1.setString(record[1].nume);
+    record1.setFont(font);
+    record1.setPosition(150, 275);
+    record2.setCharacterSize(50);
+    record2.setString(record[2].nume);
+    record2.setFont(font);
+    record2.setPosition(150, 350);
+
+    record00.setCharacterSize(50);
+    record00.setString(int_to_a(record[0].score));
+    record00.setFont(font);
+    record00.setPosition(650, 200);
+    record11.setCharacterSize(50);
+    record11.setString(int_to_a(record[1].score));
+    record11.setFont(font);
+    record11.setPosition(650, 275);
+    record22.setCharacterSize(50);
+    record22.setString(int_to_a(record[2].score));
+    record22.setFont(font);
+    record22.setPosition(650, 350);
+
+
+
+
+
+    while (win.isOpen() )
+    {
+
+        sf::Event event;
+        while (win.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                win.close();
+            else if( event.type == sf::Event::MouseButtonPressed)
+            {
+                if( ( 548<event.mouseButton.x && event.mouseButton.x<725 ) && ( 424<event.mouseButton.y && event.mouseButton.y<471 ) )
+                    return;
+            }
+        }
+
+        win.clear();
+        win.draw(sprite);
+        win.draw(record0);
+        win.draw(record1);
+        win.draw(record2);
+        win.draw(record00);
+        win.draw(record11);
+        win.draw(record22);
+        win.display();
+
+    }
+
+}
